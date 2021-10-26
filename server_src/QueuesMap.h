@@ -4,10 +4,12 @@
 #include "Queue.h"
 #include <map>
 #include <string>
+#include <mutex>
 
 class QueuesMap {
 private:
     std::map<std::string,Queue> map;
+    std::mutex mutex;
 public:
     // QueuesMap();
     void define(const std::string &queue_name);

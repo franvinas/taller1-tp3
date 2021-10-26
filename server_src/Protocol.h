@@ -14,7 +14,7 @@ public:
     /*
      *  Constructor
      */
-    Protocol(Socket &sk);
+    explicit Protocol(Socket &sk);
     /*
     *  Se debe llamar desde el servidor para esperar un cliente.
     */

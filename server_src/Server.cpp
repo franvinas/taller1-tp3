@@ -18,4 +18,6 @@ void Server::run() {
         this->threads.back().start();
     }
     
+    for (size_t i = 0; i < this->threads.size(); i++)
+        this->threads.at(i).join();
 }
