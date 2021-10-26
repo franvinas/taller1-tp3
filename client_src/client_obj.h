@@ -1,8 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "server_obj.h"
-#include "common_proxy.h"
+#include "../common_src/common_proxy.h"
 
 class Client {
 private:

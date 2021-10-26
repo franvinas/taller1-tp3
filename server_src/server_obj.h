@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "common_proxy.h"
+#include "../common_src/common_proxy.h"
 #include "server_queues_map.h"
 
 class Server {
