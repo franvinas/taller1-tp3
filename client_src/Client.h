@@ -1,11 +1,11 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../common_src/Proxy.h"
+#include "../common_src/Socket.h"
 
 class Client {
 private:
-    Proxy proxy;
+    Socket sk;
     void define();
     void push();
     void pop();

@@ -1,13 +1,17 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "../common_src/Proxy.h"
+#include "../common_src/Socket.h"
 #include "QueuesMap.h"
+#include "ServerThread.h"
+#include <vector>
 
 class Server {
 private:
-    Proxy proxy;
+    Socket sk;
+    Socket peer_sk;
     QueuesMap queuesMap;
+    // std::vector<ServerThread> threads;
 
 public:
     /*
