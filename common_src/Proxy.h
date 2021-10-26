@@ -1,7 +1,7 @@
 #ifndef PROXY_H
 #define PROXY_H
 
-#include "common_socket.h"
+#include "Socket.h"
 #include <string>
 
 class Proxy {

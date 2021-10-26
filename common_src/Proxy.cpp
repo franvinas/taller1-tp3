@@ -1,4 +1,4 @@
-#include "common_proxy.h"
+#include "Proxy.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdlib.h>

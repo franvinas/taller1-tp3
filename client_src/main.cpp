@@ -1,22 +1,20 @@
-#include "server_obj.h"
+#include "Client.h"
 #include <iostream>
 
 int main(int argc, const char *argv[]) {
-    if (argc != 2) {
+    if (argc != 3) {
         std::cerr << "Error en la cantidad de argumentos\n"
-        << "El servidor se ejecuta de la siguiente manera:\n"
-        << "./server <service>\n";
+        << "El cliente se ejecuta de la siguiente manera:\n"
+        << "./client <host> <service>\n";
         return 1;
     }
     
-
     try {
-        Server server(argv[1]);
-        server.run();
+        Client client(argv[1], argv[2]);
+        client.run();
     } catch(...) {
         return 2;
     }
-
-
+    
     return 0;
 }

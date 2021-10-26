@@ -1,7 +1,7 @@
 #ifndef QUEUES_MAP_H
 #define QUEUES_MAP_H
 
-#include "server_queue.h"
+#include "Queue.h"
 #include <map>
 #include <string>
 

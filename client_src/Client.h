@@ -1,7 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../common_src/common_proxy.h"
+#include "../common_src/Proxy.h"
 
 class Client {
 private:
