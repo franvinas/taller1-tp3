@@ -9,9 +9,8 @@
 class Server {
 private:
     Socket sk;
-    Socket peer_sk;
     QueuesMap queuesMap;
-    // std::vector<ServerThread> threads;
+    std::vector<ServerThread> threads;
 
 public:
     /*

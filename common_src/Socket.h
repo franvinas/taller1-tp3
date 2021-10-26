@@ -21,9 +21,9 @@ public:
      */
     Socket();
     /*
-     *  Constructor 2
+     *  Constructor por movimiento
      */
-    explicit Socket(int &fd);
+    Socket(Socket &&other);
     /*
     *  Asigna IP ("host") y numero de puerto ("service") al socket.
     *  "queue_length" indica la cantidad de cliente que se quiere mantener en
@@ -36,7 +36,7 @@ public:
     *  Acepta al socket "peer". Una vez que la conexión finaliza
     *  el socket peer debe ser destruido.
     */
-    void accept(Socket &peer);
+    void accept(Socket &peer) const;
 
     /*
     *  El socket se conecta la IP dada por "host" en el puerto dado por "service".

@@ -44,7 +44,7 @@ std::string Protocol::recv_string() {
     Metodos publicos
 ************************/
 
-Protocol::Protocol(Socket &sk) : sk(sk) {}
+Protocol::Protocol(Socket &sk) : sk(std::move(sk)) {}
 
 
 void Protocol::server_send(std::string &msg) {
@@ -56,6 +56,7 @@ int Protocol::server_recv(std::string &cmd,
                           std::string &message) {
     char cmd_char;
     int b = this->sk.recv(&cmd_char, 1);
+    if (b == -1) throw -1;
     if (b == 0) return 0; // Socket closed
     queue_name = this->recv_string();
 

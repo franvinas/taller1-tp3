@@ -6,7 +6,7 @@
 
 class Protocol {
 private:
-    Socket &sk;
+    Socket sk;
     void send_string(std::string &str);
     std::string recv_string();
 

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <iostream>
 
 /***********************
     Metodos privados
@@ -70,7 +71,9 @@ void Socket::_accept(const int &fd) {
 
 Socket::Socket() : fd(-1) {}
 
-Socket::Socket(int &fd) : fd(std::move(fd)) {}
+Socket::Socket(Socket &&other) : fd(std::move(other.fd)) {
+    other.fd = -1;
+}
 
 Socket::~Socket() {
     if (this->fd != -1)
@@ -118,7 +121,7 @@ int Socket::bind_and_listen(const char *host,
     return 0;
 }
 
-void Socket::accept(Socket &peer) {
+void Socket::accept(Socket &peer) const {
     int a = ::accept(this->fd, NULL, NULL);
     if (a == -1) {
         printf("Error: %s\n", strerror(errno));
