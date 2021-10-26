@@ -3,7 +3,7 @@
 
 int main(int argc, const char *argv[]) {
     if (argc != 2) {
-        std::cout << "Error en la cantidad de argumentos\n"
+        std::cerr << "Error en la cantidad de argumentos\n"
         << "El servidor se ejecuta de la siguiente manera:\n"
         << "./server <service>\n";
         return 1;

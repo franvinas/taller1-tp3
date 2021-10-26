@@ -2,16 +2,18 @@
 #define SERVER_H
 
 #include "common_proxy.h"
+#include "server_queues_map.h"
 
 class Server {
 private:
     Proxy proxy;
+    QueuesMap queuesMap;
 
 public:
     /*
      *  Constructor
      */
-    Server(const char *service);
+    explicit Server(const char *service);
     /*
      *  
      */

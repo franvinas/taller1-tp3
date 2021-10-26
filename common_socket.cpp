@@ -50,7 +50,7 @@ int Socket::_bind(struct addrinfo *ptr) {
     return 0;
 }
 
-int Socket::_listen(int queue_length) {
+int Socket::_listen(const int &queue_length) {
     int s = listen(this->fd, queue_length);
     if (s == -1) {
         printf("Error: %s\n", strerror(errno));
@@ -58,6 +58,10 @@ int Socket::_listen(int queue_length) {
         return -1;
     }
     return 0;
+}
+
+void Socket::_accept(const int &fd) {
+    this->fd = fd;
 }
 
 /***********************
@@ -123,10 +127,6 @@ void Socket::accept(Socket &peer) {
     peer._accept(a);
 }
 
-void Socket::_accept(int &fd) {
-    this->fd = fd;
-}
-
 int Socket::connect(const char *host, const char *service) {
     struct addrinfo *ptr, *rp;
     bool passive = false; // necesario para luego usar connect
@@ -158,7 +158,8 @@ int Socket::connect(const char *host, const char *service) {
 int Socket::send(const char *buffer, ssize_t len) {
     ssize_t sent_b = 0;
     while (len > sent_b) {
-        ssize_t b = ::send(this->fd, buffer + sent_b, len - sent_b, MSG_NOSIGNAL);
+        ssize_t b = ::send(this->fd, buffer + sent_b, 
+                            len - sent_b, MSG_NOSIGNAL);
         if (b == -1) {
             printf("Error send: %s\n", strerror(errno));
             return -1;

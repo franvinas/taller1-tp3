@@ -12,8 +12,8 @@ private:
                     bool passive);
     int _reuse_address();
     int _bind(struct addrinfo *ptr);
-    int _listen(int queue_length);
-    void _accept(int &fd);
+    int _listen(const int &queue_length);
+    void _accept(const int &fd);
 
 public:
     /*
@@ -23,7 +23,7 @@ public:
     /*
      *  Constructor 2
      */
-    Socket(int &fd);
+    explicit Socket(int &fd);
     /*
     *  Asigna IP ("host") y numero de puerto ("service") al socket.
     *  "queue_length" indica la cantidad de cliente que se quiere mantener en

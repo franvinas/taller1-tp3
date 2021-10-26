@@ -3,7 +3,7 @@
 
 int main(int argc, const char *argv[]) {
     if (argc != 3) {
-        std::cout << "Error en la cantidad de argumentos\n"
+        std::cerr << "Error en la cantidad de argumentos\n"
         << "El cliente se ejecuta de la siguiente manera:\n"
         << "./client <host> <service>\n";
         return 1;

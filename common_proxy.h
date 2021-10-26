@@ -2,15 +2,14 @@
 #define PROXY_H
 
 #include "common_socket.h"
-#include "common_command.h"
 #include <string>
 
 class Proxy {
 private:
     Socket sk;
     Socket peer_sk;
-    void send_string(std::string &str);
-    std::string recv_string();
+    void send_string(Socket &sk, std::string &str);
+    std::string recv_string(Socket &sk);
 
 public:
     /*
@@ -30,7 +29,7 @@ public:
     /*
     *  Termina la conexión con el cliente.
     */
-    void free_client();
+    // void free_client();
 
     /*
     *  Se debe llamar desde el cliente para conectarse a un servidor dado 
@@ -42,24 +41,22 @@ public:
     *  Se debe llamar desde el servidor para enviar un mensaje al cliente con el
     *  protocolo (manejo de bits) adecuado.
     */
-    void server_send(const char *game_state);
+    void server_send(std::string &msg);
 
     /*
-    *  Se debe llamar desde el servidor. Recibe un caracter 'c'.
+    *  Se debe llamar desde el servidor.
     */
-    Command *server_recv();
+    int server_recv(std::string &cmd, 
+                    std::string &queue_name, 
+                    std::string &message);
 
     /*
-    *  Se debe llamar desde el cliente. Envía un caracter 'c'.
+    *  Se debe llamar desde el cliente.
     */
     void client_send(std::string &cmd_unparsed);
 
     /*
-    *  Se debe llamar desde el cliente para recibir un mensaje al servidor con el
-    *  protocolo (manejo de bits) adecuado. Se almacenan los datos extraídos del 
-    *  mensaje recibido en 'partial_word', 'tries_left' y 'game_over'.
-    *  Si 'partial_word' es un puntero a NULL se aloca la memoria necesaria. Es 
-    *  responsabilidad del usuario de la función liberar esta memoria.
+    *  Se debe llamar desde el cliente luego de un pop para recibir el mensaje
     */
     std::string client_recv();
     /*
