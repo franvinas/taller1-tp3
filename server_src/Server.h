@@ -4,13 +4,13 @@
 #include "../common_src/Socket.h"
 #include "QueuesMap.h"
 #include "ServerThread.h"
-#include <vector>
+#include <deque>
 
 class Server {
 private:
     Socket sk;
     QueuesMap queuesMap;
-    std::vector<ServerThread> threads;
+    std::deque<ServerThread> threads;
 
 public:
     /*
