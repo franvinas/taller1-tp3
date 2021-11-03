@@ -21,6 +21,10 @@ public:
      */
     Socket();
     /*
+     *  Constructor por copia
+     */
+    Socket(const Socket &other) = delete;
+    /*
      *  Constructor por movimiento
      */
     Socket(Socket &&other);

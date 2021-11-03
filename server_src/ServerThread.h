@@ -30,6 +30,14 @@ public:
      *  Constructor
      */
     ServerThread(Socket &peer_sk, QueuesMap &queuesMap);
+    /*
+     *  Constructor por copia
+     */
+    ServerThread(const ServerThread &other) = delete;
+    /*
+     *  Constructor por movimiento
+     */
+    ServerThread(ServerThread &&other);
 };
 
 #endif

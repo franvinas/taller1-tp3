@@ -44,6 +44,10 @@ public:
      */
     Thread();
     /*
+     *  Constructor por copia
+     */
+    Thread(const Thread &other) = delete;
+    /*
      *  Constructor por movimiento
      */
     Thread(Thread &&other);

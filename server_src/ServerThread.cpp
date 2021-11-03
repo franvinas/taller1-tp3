@@ -6,6 +6,11 @@ ServerThread::ServerThread(Socket &peer_sk, QueuesMap &queuesMap)
                 : protocol(peer_sk),
                 queuesMap(queuesMap) {}
 
+ServerThread::ServerThread(ServerThread &&other) 
+                : Thread(std::move(other)),
+                  protocol(std::move(other.protocol)),
+                  queuesMap(other.queuesMap) {}
+
 void ServerThread::run() {
     std::string cmd;
     std::string queue_name;
