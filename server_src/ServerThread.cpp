@@ -19,7 +19,7 @@ void ServerThread::run() {
             std::string msg = this->queuesMap.pop(queue_name);
             this->protocol.server_send(msg);
         } else {
-            throw -1;
+            throw std::runtime_error("Command unknown");
         }
     }
 }

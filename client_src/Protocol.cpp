@@ -26,14 +26,14 @@ std::string Protocol::recv_string() {
     std::string str;
     char name_len_msg[2];
     int b = this->sk.recv(name_len_msg, 2);
-    if (b <= 0) throw -1;
+    if (b <= 0) throw std::runtime_error("Error in recv()");
     unsigned short int name_len_be;
     memcpy(&name_len_be, name_len_msg, 2);
     unsigned short int name_len = ntohs(name_len_be);
 
     char *name = (char *) malloc(name_len);
     b = this->sk.recv(name, name_len);
-    if (b <= 0) throw -1;
+    if (b <= 0) throw std::runtime_error("Error in recv()");
     str.clear();
     str.append(name, name_len);
     free(name);
@@ -62,7 +62,7 @@ void Protocol::client_send(std::string &cmd_unparsed) {
     } else if (cmd == "pop") {
         cmd_char = 'o';
     } else {
-        throw -1;
+        throw std::runtime_error("Command unknown");
     }
     this->sk.send(&cmd_char, 1);
     std::string queue_name;

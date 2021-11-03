@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <utility>
 
 #define LISTEN_BACKLOG 50
 
@@ -26,14 +27,14 @@ std::string Protocol::recv_string() {
     std::string str;
     char name_len_msg[2];
     int b = this->sk.recv(name_len_msg, 2);
-    if (b <= 0) throw -1;
+    if (b <= 0) throw std::runtime_error("Error in recv()");
     unsigned short int name_len_be;
     memcpy(&name_len_be, name_len_msg, 2);
     unsigned short int name_len = ntohs(name_len_be);
 
     char *name = (char *) malloc(name_len);
     b = this->sk.recv(name, name_len);
-    if (b <= 0) throw -1;
+    if (b <= 0) throw std::runtime_error("Error in recv()");
     str.clear();
     str.append(name, name_len);
     free(name);
@@ -56,7 +57,7 @@ int Protocol::server_recv(std::string &cmd,
                           std::string &message) {
     char cmd_char;
     int b = this->sk.recv(&cmd_char, 1);
-    if (b == -1) throw -1;
+    if (b == -1) throw std::runtime_error("Error in recv()");
     if (b == 0) return 0; // Socket closed
     queue_name = this->recv_string();
 
@@ -68,7 +69,7 @@ int Protocol::server_recv(std::string &cmd,
     } else if (cmd_char == 'o') {
         cmd = "pop";
     } else {
-        throw -1;
+        throw std::runtime_error("Command unknown");
     }
     return b;
 }

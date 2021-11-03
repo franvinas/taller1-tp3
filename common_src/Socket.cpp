@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
+#include <utility>
 
 /***********************
     Metodos privados
@@ -27,7 +28,7 @@ int Socket::_getaddrinfo(const char *host,
     s = getaddrinfo(host, service, &hints, ptr);
     if (s != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
-        return -1;
+        throw std::runtime_error("Error in socket getaddrinfo()");
     }
     return 0;
 }
@@ -38,7 +39,7 @@ int Socket::_getaddrinfo(const char *host,
 int Socket::_reuse_address() {
     int val = 1;
     int s = setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
-    if (s == -1) return -1;
+    if (s == -1) throw std::runtime_error("Error in socket setsockopt()");
     return 0;
 }
 
@@ -56,7 +57,7 @@ int Socket::_listen(const int &queue_length) {
     if (s == -1) {
         printf("Error: %s\n", strerror(errno));
         close(this->fd);
-        return -1;
+        throw std::runtime_error("Error in socket listen()");
     }
     return 0;
 }
@@ -86,8 +87,7 @@ int Socket::bind_and_listen(const char *host,
     struct addrinfo *ptr, *rp;
     bool passive = true; // necesario para luego aceptar conexiones
     
-    if (this->_getaddrinfo(host, service, &ptr, passive) != 0)
-        return -1;
+    this->_getaddrinfo(host, service, &ptr, passive);
 
     for (rp = ptr; rp != NULL; rp = rp->ai_next) {
         this->fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -104,20 +104,13 @@ int Socket::bind_and_listen(const char *host,
     if (rp == NULL) { // Falló bind para todas las addrs
         printf("Error: %s\n", strerror(errno));
         close(this->fd);
-        return -1;
+        throw std::runtime_error("Error in socket bind()");
     }
 
-    if (this->_reuse_address() != 0) {
-        printf("Error: %s\n", strerror(errno));
-        close(this->fd);
-        return -1;
-    }
+    this->_reuse_address();
     
-    if (this->_listen(queue_length) != 0) {
-        printf("Error: %s\n", strerror(errno));
-        close(this->fd);
-        return -1;
-    }
+    this->_listen(queue_length);
+
     return 0;
 }
 
@@ -125,7 +118,7 @@ void Socket::accept(Socket &peer) const {
     int a = ::accept(this->fd, NULL, NULL);
     if (a == -1) {
         printf("Error: %s\n", strerror(errno));
-        throw -1;
+        throw std::runtime_error("Error in socket accept()");
     }
     peer._accept(a);
 }
@@ -135,7 +128,7 @@ int Socket::connect(const char *host, const char *service) {
     bool passive = false; // necesario para luego usar connect
     
     if (this->_getaddrinfo(host, service, &ptr, passive) != 0)
-        return -1;
+        std::runtime_error("Error in socket connect()");
 
     for (rp = ptr; rp != NULL; rp = rp->ai_next) {
         this->fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
@@ -152,7 +145,7 @@ int Socket::connect(const char *host, const char *service) {
     if (rp == NULL) { // Falló connect para todas las addrs
         printf("Error: %s\n", strerror(errno));
         close(this->fd);
-        return -1;
+        throw std::runtime_error("Error in socket connect()");
     }
 
     return 0;
@@ -165,7 +158,7 @@ int Socket::send(const char *buffer, ssize_t len) {
                             len - sent_b, MSG_NOSIGNAL);
         if (b == -1) {
             printf("Error send: %s\n", strerror(errno));
-            return -1;
+            throw std::runtime_error("Error in socket send()");
         } else if (b == 0) { // Socket cerrado
             return 0;
         } else {
@@ -182,7 +175,7 @@ int Socket::recv(char *buffer, ssize_t len) {
         ssize_t b = ::recv(this->fd, buffer + recv_b, len - recv_b, 0);
         if (b == -1) {
             printf("Error recv: %s\n", strerror(errno));
-            return -1;
+            throw std::runtime_error("Error in socket recv()");
         } else if (b == 0) { // Socket cerrado
             return 0;
         } else {
