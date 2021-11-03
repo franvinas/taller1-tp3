@@ -28,7 +28,7 @@ public:
     /*
     *  Termina la conexión con el cliente.
     */
-    // void free_client();
+    void close_connection();
 
     /*
     *  Se debe llamar desde el servidor para enviar un mensaje al cliente con el

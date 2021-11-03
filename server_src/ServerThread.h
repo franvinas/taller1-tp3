@@ -4,6 +4,7 @@
 #include "Thread.h"
 #include "Protocol.h"
 #include "QueuesMap.h"
+#include <atomic>
 
 /*
  *  ServerThread hereda de Thread e implementa run().
@@ -15,6 +16,8 @@ class ServerThread: public Thread {
 private:
     Protocol protocol;    
     QueuesMap &queuesMap;
+    std::atomic<bool> keep_talking;
+    std::atomic<bool> is_running;
     
 protected:
     /*
@@ -38,6 +41,10 @@ public:
      *  Constructor por movimiento
      */
     ServerThread(ServerThread &&other);
+    /*
+     *  Termina la comunicacion con el cliente
+     */
+    void stop();
 };
 
 #endif

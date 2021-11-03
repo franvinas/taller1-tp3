@@ -23,7 +23,11 @@ public:
     /*
      *  Constructor por copia
      */
-    Socket(const Socket &other) = delete;
+    Socket(const Socket&) = delete;
+    /*
+     *  Asignacion por copia
+     */
+    Socket& operator=(const Socket&) = delete;
     /*
      *  Constructor por movimiento
      */
@@ -40,7 +44,7 @@ public:
     *  Acepta al socket "peer". Una vez que la conexión finaliza
     *  el socket peer debe ser destruido.
     */
-    void accept(Socket &peer) const;
+    int accept(Socket &peer) const;
 
     /*
     *  El socket se conecta la IP dada por "host" en el puerto dado por "service".
@@ -60,6 +64,14 @@ public:
     *  Si ocurre un error la funcion retorna un valor distinto de 0.
     */
     int recv(char *buffer, ssize_t len);
+    /*
+     *  Desabilita las operaciones de send y recv
+     */
+    void shutdown();
+    /*
+     *  Cierra el socket
+     */
+    void close();
     /*
      *  Destructor
      */

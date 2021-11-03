@@ -1,8 +1,10 @@
 #include "Server.h"
 #include "Protocol.h"
+#include "AcceptorThread.h"
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <iostream>
 
 #define LISTEN_BACKLOG 50
 
@@ -11,13 +13,12 @@ Server::Server(const char *service) {
 }
 
 void Server::run() {
-    while (1) {
-        Socket peer_sk;
-        this->sk.accept(peer_sk);
-        this->threads.push_back(ServerThread(peer_sk, queuesMap));
-        this->threads.back().start();
+    AcceptorThread acceptor(this->sk);
+    acceptor.start();
+    char c = getchar();
+    while (c != 'q') {
+        c = std::cin.get();
     }
-    
-    for (size_t i = 0; i < this->threads.size(); i++)
-        this->threads.at(i).join();
+    acceptor.stop();
+    acceptor.join();
 }

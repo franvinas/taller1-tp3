@@ -73,3 +73,8 @@ int Protocol::server_recv(std::string &cmd,
     }
     return b;
 }
+
+void Protocol::close_connection() {
+    this->sk.shutdown();
+    this->sk.close();
+}

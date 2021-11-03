@@ -56,7 +56,7 @@ int Socket::_listen(const int &queue_length) {
     int s = listen(this->fd, queue_length);
     if (s == -1) {
         printf("Error: %s\n", strerror(errno));
-        close(this->fd);
+        ::close(this->fd);
         throw std::runtime_error("Error in socket listen()");
     }
     return 0;
@@ -78,7 +78,7 @@ Socket::Socket(Socket &&other) : fd(std::move(other.fd)) {
 
 Socket::~Socket() {
     if (this->fd != -1)
-        close(this->fd);
+        ::close(this->fd);
 }
 
 int Socket::bind_and_listen(const char *host,
@@ -97,13 +97,13 @@ int Socket::bind_and_listen(const char *host,
         if (this->_bind(rp) == 0)
             break; // Bind exitoso
 
-        close(this->fd);
+        ::close(this->fd);
     }
     freeaddrinfo(ptr);
     
     if (rp == NULL) { // Falló bind para todas las addrs
         printf("Error: %s\n", strerror(errno));
-        close(this->fd);
+        ::close(this->fd);
         throw std::runtime_error("Error in socket bind()");
     }
 
@@ -114,13 +114,13 @@ int Socket::bind_and_listen(const char *host,
     return 0;
 }
 
-void Socket::accept(Socket &peer) const {
+int Socket::accept(Socket &peer) const {
     int a = ::accept(this->fd, NULL, NULL);
     if (a == -1) {
-        printf("Error: %s\n", strerror(errno));
-        throw std::runtime_error("Error in socket accept()");
+        return -1;
     }
     peer._accept(a);
+    return a;
 }
 
 int Socket::connect(const char *host, const char *service) {
@@ -138,13 +138,13 @@ int Socket::connect(const char *host, const char *service) {
         if (::connect(this->fd, ptr->ai_addr, ptr->ai_addrlen) == 0)
             break; // Connect exitoso
 
-        close(this->fd);
+        ::close(this->fd);
     }
     freeaddrinfo(ptr);
     
     if (rp == NULL) { // Falló connect para todas las addrs
         printf("Error: %s\n", strerror(errno));
-        close(this->fd);
+        ::close(this->fd);
         throw std::runtime_error("Error in socket connect()");
     }
 
@@ -183,4 +183,12 @@ int Socket::recv(char *buffer, ssize_t len) {
         }
     }
     return recv_b;
+}
+
+void Socket::shutdown() {
+    ::shutdown(this->fd, SHUT_RDWR);
+}
+
+void Socket::close() {
+    ::close(this->fd);
 }
