@@ -2,11 +2,11 @@
 #include "../common_src/defs.h"
 #include <string.h>
 #include <arpa/inet.h>
-#include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <utility>
+#include <vector>
 
 #define LISTEN_BACKLOG 50
 
@@ -33,13 +33,12 @@ std::string Protocol::recv_string() {
     memcpy(&name_len_be, name_len_msg, 2);
     unsigned short int name_len = ntohs(name_len_be);
 
-    char *name = (char *) malloc(name_len);
-    b = this->sk.recv(name, name_len);
+    std::vector<char> name;
+    name.reserve(name_len);
+    char *buf = &name[0];
+    b = this->sk.recv(buf, name_len);
     if (b <= 0) throw std::runtime_error("Error in recv()");
-    str.clear();
-    str.append(name, name_len);
-    free(name);
-    return str;
+    return std::string(buf, name_len);
 }
 
 std::string Protocol::parse_cmd(char c) {
@@ -65,8 +64,8 @@ void Protocol::send(std::string &msg) {
 }
 
 int Protocol::recv(std::string &cmd, 
-                          std::string &queue_name, 
-                          std::string &message) {
+                   std::string &queue_name, 
+                   std::string &message) {
     char cmd_char;
     int b = this->sk.recv(&cmd_char, 1);
     if (b == -1) throw std::runtime_error("Error in recv()");
