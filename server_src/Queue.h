@@ -13,9 +13,14 @@ public:
      */
     void push(const std::string &message);
     /*
-     *  Desencola un mensaje y lo retorna
+     *  Desencola un mensaje y lo retorna. 
+     *  Si la cola esta vacia lanza una excepcion.
      */
     std::string pop();
+    /*
+     *  Desencola un mensaje y lo retorna
+     */
+    bool empty() const;
 };
 
 #endif

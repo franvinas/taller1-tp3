@@ -5,11 +5,13 @@
 #include <map>
 #include <string>
 #include <mutex>
+#include <condition_variable>
 
 class QueuesMap {
 private:
     std::map<std::string,Queue> map;
     std::mutex mutex;
+    std::condition_variable cv;
 public:
     /*
      *  Si no existe una cola con el nombre 'queue_name', entonces la crea

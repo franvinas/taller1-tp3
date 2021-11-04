@@ -17,3 +17,7 @@ std::string Queue::pop() {
     this->queue.pop_front();
     return message;
 }
+
+bool Queue::empty() const {
+    return this->queue.empty();
+}
