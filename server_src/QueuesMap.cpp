@@ -5,8 +5,7 @@
 
 void QueuesMap::define(const std::string &queue_name) {
     std::lock_guard<std::mutex> lock(this->mutex);
-    if (this->map.count(queue_name) == 0)
-        this->map[queue_name] = Queue();
+    this->map.insert({queue_name, Queue()});
 }
 
 void QueuesMap::push(const std::string &queue_name, 
