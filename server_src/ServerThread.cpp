@@ -1,6 +1,7 @@
 #include "ServerThread.h"
 #include <iostream>
 #include <string>
+#include <utility>
 
 /***********************
     Metodos privados
