@@ -3,6 +3,9 @@
 #include <utility>
 #include <stdexcept>
 
+/***********************
+    Metodos publicos
+************************/
 
 void Queue::push(const std::string &message) {
     this->queue.push_back(message);

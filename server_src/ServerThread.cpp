@@ -1,4 +1,5 @@
 #include "ServerThread.h"
+#include "../common_src/defs.h"
 #include <iostream>
 #include <string>
 #include <utility>
@@ -10,17 +11,32 @@
 void ServerThread::exec_cmd(const std::string &cmd, 
                             const std::string &queue_name, 
                             const std::string &message) {
-    if (cmd == "define") {
+    if (cmd == DEFINE_CMD) {
         this->queuesMap.define(queue_name);
-    } else if (cmd == "push") {
+    } else if (cmd == PUSH_CMD) {
         this->queuesMap.push(queue_name, message);
-    } else if (cmd == "pop") {
+    } else if (cmd == POP_CMD) {
         std::string msg = this->queuesMap.pop(queue_name);
-        this->protocol.server_send(msg);
+        this->protocol.send(msg);
     } else {
         throw std::runtime_error("Command unknown");
     }
 }
+
+/***********************
+    Metodos protegidos
+************************/
+
+void ServerThread::run() {
+    std::string cmd, queue_name, message;
+    size_t bytes_recv = this->protocol.recv(cmd, queue_name, message);
+    while (this->keep_talking && bytes_recv > 0) {
+        exec_cmd(cmd, queue_name, message);
+        bytes_recv = this->protocol.recv(cmd, queue_name, message);
+    }
+    is_running = false;
+}
+
 
 /***********************
     Metodos publicos
@@ -38,18 +54,6 @@ ServerThread::ServerThread(ServerThread &&other)
                   queuesMap(other.queuesMap),
                   keep_talking(!other.is_dead()),
                   is_running(!other.is_dead()) {}
-
-void ServerThread::run() {
-    std::string cmd;
-    std::string queue_name;
-    std::string message;
-    size_t bytes_recv = this->protocol.server_recv(cmd, queue_name, message);
-    while (this->keep_talking && bytes_recv > 0) {
-        exec_cmd(cmd, queue_name, message);
-        bytes_recv = this->protocol.server_recv(cmd, queue_name, message);
-    }
-    is_running = false;
-}
 
 void ServerThread::stop() {
     this->keep_talking = false;

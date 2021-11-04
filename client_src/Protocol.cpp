@@ -1,4 +1,5 @@
 #include "Protocol.h"
+#include "../common_src/defs.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
@@ -40,6 +41,17 @@ std::string Protocol::recv_string() {
     return str;
 }
 
+char Protocol::parse_cmd(const std::string &cmd) {
+    if (cmd == DEFINE_CMD) {
+        return DEFINE_CHAR;
+    } else if (cmd == PUSH_CMD) {
+        return PUSH_CHAR;
+    } else if (cmd == POP_CMD) {
+        return POP_CHAR;
+    }
+    throw std::runtime_error("Command unknown");
+}
+
 /***********************
     Metodos publicos
 ************************/
@@ -50,32 +62,24 @@ void Protocol::connect(const char *host, const char *port) {
     this->sk.connect(host, port);
 }
 
-void Protocol::client_send(std::string &cmd_unparsed) {
+void Protocol::send(std::string &cmd_unparsed) {
     std::stringstream cmd_unparsed_stream(cmd_unparsed);
-    std::string cmd;
-    char cmd_char;
+    std::string cmd, queue_name;
     cmd_unparsed_stream >> cmd;
-    if (cmd == "define") {
-        cmd_char = 'd';
-    } else if (cmd == "push") {
-        cmd_char = 'u';
-    } else if (cmd == "pop") {
-        cmd_char = 'o';
-    } else {
-        throw std::runtime_error("Command unknown");
-    }
+    
+    char cmd_char = parse_cmd(cmd);
     this->sk.send(&cmd_char, 1);
-    std::string queue_name;
+    
     cmd_unparsed_stream >> queue_name;
     this->send_string(queue_name);
     
-    if (cmd == "push") {
+    if (cmd == PUSH_CMD) {
         std::string message;
         cmd_unparsed_stream >> message;
         this->send_string(message);
     }
 }
 
-std::string Protocol::client_recv() {
+std::string Protocol::recv() {
     return this->recv_string();
 }

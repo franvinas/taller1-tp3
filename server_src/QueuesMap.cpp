@@ -1,7 +1,9 @@
 #include "QueuesMap.h"
 #include <string>
 
-// QueuesMap::QueuesMap() {}
+/***********************
+    Metodos publicos
+************************/
 
 void QueuesMap::define(const std::string &queue_name) {
     std::lock_guard<std::mutex> lock(this->mutex);

@@ -8,9 +8,14 @@ class Queue {
 private:
     std::deque<std::string> queue;
 public:
+    /*
+     *  Encola el mensaje
+     */
     void push(const std::string &message);
+    /*
+     *  Desencola un mensaje y lo retorna
+     */
     std::string pop();
 };
-
 
 #endif

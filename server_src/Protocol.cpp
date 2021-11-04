@@ -1,4 +1,5 @@
 #include "Protocol.h"
+#include "../common_src/defs.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
@@ -41,6 +42,17 @@ std::string Protocol::recv_string() {
     return str;
 }
 
+std::string Protocol::parse_cmd(char c) {
+    if (c == DEFINE_CHAR) {
+        return DEFINE_CMD;
+    } else if (c == PUSH_CHAR) {
+        return PUSH_CMD;
+    } else if (c == POP_CHAR) {
+        return POP_CMD;
+    }
+    throw std::runtime_error("Command unknown");
+}
+
 /***********************
     Metodos publicos
 ************************/
@@ -48,11 +60,11 @@ std::string Protocol::recv_string() {
 Protocol::Protocol(Socket &sk) : sk(std::move(sk)) {}
 
 
-void Protocol::server_send(std::string &msg) {
+void Protocol::send(std::string &msg) {
     send_string(msg);
 }
 
-int Protocol::server_recv(std::string &cmd, 
+int Protocol::recv(std::string &cmd, 
                           std::string &queue_name, 
                           std::string &message) {
     char cmd_char;
@@ -60,17 +72,11 @@ int Protocol::server_recv(std::string &cmd,
     if (b == -1) throw std::runtime_error("Error in recv()");
     if (b == 0) return 0; // Socket closed
     queue_name = this->recv_string();
+    cmd = parse_cmd(cmd_char);
 
-    if (cmd_char == 'd') {
-        cmd = "define";
-    } else if (cmd_char == 'u') {
-        cmd = "push";
+    if (cmd == PUSH_CMD)
         message = this->recv_string();
-    } else if (cmd_char == 'o') {
-        cmd = "pop";
-    } else {
-        throw std::runtime_error("Command unknown");
-    }
+    
     return b;
 }
 

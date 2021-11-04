@@ -15,10 +15,11 @@ private:
     Socket &sk;
     QueuesMap queuesMap;
     std::list<ServerThread> threads;
+    void free_dead_threads();
     
 protected:
     /*
-     *  
+     *  Acepta nuevos clientes y lanza un thread por cada uno que se conecta
      */
     void run() override;
 

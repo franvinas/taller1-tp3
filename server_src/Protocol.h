@@ -9,6 +9,7 @@ private:
     Socket sk;
     void send_string(std::string &str);
     std::string recv_string();
+    std::string parse_cmd(char c);
 
 public:
     /*
@@ -16,37 +17,32 @@ public:
      */
     explicit Protocol(Socket &sk);
     /*
-    *  Se debe llamar desde el servidor para esperar un cliente.
-    */
+     *  Esperar a que un cliente se conecte.
+     */
     void listen(const char *port);
 
     /*
-    *  Acepta un nuevo cliente.
-    */
+     *  Acepta un nuevo cliente.
+     */
     void new_client();
 
     /*
-    *  Termina la conexión con el cliente.
-    */
+     *  Termina la conexión con el cliente.
+     */
     void close_connection();
 
     /*
-    *  Se debe llamar desde el servidor para enviar un mensaje al cliente con el
-    *  protocolo (manejo de bits) adecuado.
-    */
-    void server_send(std::string &msg);
-
-    /*
-    *  Se debe llamar desde el servidor.
-    */
-    int server_recv(std::string &cmd, 
-                    std::string &queue_name, 
-                    std::string &message);
-
-    /*
-     *  Destructor
+     *  Envia un mensaje al cliente con el
+     *  protocolo (manejo de bits) adecuado.
      */
-    // ~Protocol();
+    void send(std::string &msg);
+
+    /*
+     *  Recibe un comando de un cliente.
+     */
+    int recv(std::string &cmd, 
+             std::string &queue_name, 
+             std::string &message);
 };
 
 #endif

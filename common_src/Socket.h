@@ -33,36 +33,38 @@ public:
      */
     Socket(Socket &&other);
     /*
-    *  Asigna IP ("host") y numero de puerto ("service") al socket.
-    *  "queue_length" indica la cantidad de cliente que se quiere mantener en
-    *  espera. Se atiende a un cliente a la vez.
-    */
+     *  Asigna IP ("host") y numero de puerto ("service") al socket.
+     *  "queue_length" indica la cantidad de clientes que se quiere mantener en
+     *  espera.
+     */
     int bind_and_listen(const char *host, 
                         const char *service, 
                         int queue_length);
     /*
-    *  Acepta al socket "peer". Una vez que la conexión finaliza
-    *  el socket peer debe ser destruido.
-    */
+     *  Acepta al socket "peer". Una vez que la conexión finaliza
+     *  el socket peer debe ser destruido.
+     */
     int accept(Socket &peer) const;
 
     /*
-    *  El socket se conecta la IP dada por "host" en el puerto dado por "service".
-    */
+     *  El socket se conecta la IP dada por "host" en el puerto dado por "service".
+     */
     int connect(const char *host, const char *service);
 
     /*
-    *  Se envian una cantidad de bytes (dada por len) del "buffer".
-    *  Se asegura que todos los bytes se envian.
-    *  Si ocurre un error la funcion retorna un valor distinto de 0.
-    */
+     *  Se envian una cantidad de bytes (dada por len) del "buffer".
+     *  Se asegura que todos los bytes se envian.
+     *  Si ocurre un error la funcion retorna un valor distinto de 0.
+     */
     int send(const char *buffer, ssize_t len);
 
     /*
-    *  Se recibe una cantidad de bytes (dada por len) y se guarda en el "buffer".
-    *  Se asegura que todos los bytes se reciben.
-    *  Si ocurre un error la funcion retorna un valor distinto de 0.
-    */
+     *  Se recibe una cantidad de bytes (dada por len) y se guarda en el "buffer".
+     *  Se asegura que todos los bytes se reciben.
+     *  Si ocurre un error la funcion lanza una excepcion.
+     *  Si el socket esta cerrado retorna 0
+     *  Si la ejecucion finaliza sin errores, retorna la cantidad de bytes recibidos.
+     */
     int recv(char *buffer, ssize_t len);
     /*
      *  Desabilita las operaciones de send y recv

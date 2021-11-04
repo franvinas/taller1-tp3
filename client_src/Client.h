@@ -16,13 +16,10 @@ public:
      */
     Client(const char *host, const char *service);
     /*
-     *  
+     *  Corre el cliente. Su ejecucion consiste en leer comandos de entrada 
+     *  estandar, parsearlos y enviarlos al servidor.
      */
     void run();
-    /*
-     *  Destructor
-     */
-    // ~Client();
 };
 
 #endif

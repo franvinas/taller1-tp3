@@ -9,9 +9,8 @@
 
 /*
  *  ServerThread hereda de Thread e implementa run().
- *  Todas las instancias ServerThread tienen una referencia a la taskQueue y
- *  al dataset. Notar que tanto el taskQueue como el dataset son los 
- *  mismos para todas los ServerThreads.
+ *  Todas las instancias ServerThread tienen una referencia a la queuesMap
+ *  ya que este es un recurso compartido
  */
 class ServerThread: public Thread {
 private:
@@ -25,10 +24,8 @@ private:
     
 protected:
     /*
-     *  Se busca por el siguiente Task que no fue analizado completamente
-     *  y se aplica la operacion correspondiente para dicho Task en la
-     *  siguiente particion. Una vez que ya fueron analizados todos los
-     *  Tasks la funcion retorna.
+     *  La ejecucion de un hilo ServerThread consiste en recibir comandos
+     *  del cliente y ejecutarlos.
      */
     void run() override;
 
