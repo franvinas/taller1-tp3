@@ -12,9 +12,14 @@ int main(int argc, const char *argv[]) {
     try {
         Client client(argv[1], argv[2]);
         client.run();
+    } catch(const std::exception &e) {
+        std::cerr << "Se atrapó una excepcion en el cliente: '" 
+                  << e.what() << "'" << std::endl;
+        return 2;
     } catch(...) {
+        std::cerr << "Error desconocido en el cliente" << std::endl;
         return 2;
     }
-    
+
     return 0;
 }

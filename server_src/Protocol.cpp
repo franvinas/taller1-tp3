@@ -25,7 +25,6 @@ void Protocol::send_string(std::string &str) {
 }
 
 std::string Protocol::recv_string() {
-    std::string str;
     char name_len_msg[2];
     int b = this->sk.recv(name_len_msg, 2);
     if (b <= 0) throw std::runtime_error("Error in recv()");
