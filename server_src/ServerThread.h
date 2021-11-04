@@ -5,6 +5,7 @@
 #include "Protocol.h"
 #include "QueuesMap.h"
 #include <atomic>
+#include <string>
 
 /*
  *  ServerThread hereda de Thread e implementa run().
@@ -18,6 +19,9 @@ private:
     QueuesMap &queuesMap;
     std::atomic<bool> keep_talking;
     std::atomic<bool> is_running;
+    void exec_cmd(const std::string &cmd, 
+                  const std::string &queue_name, 
+                  const std::string &message);
     
 protected:
     /*
@@ -45,6 +49,11 @@ public:
      *  Termina la comunicacion con el cliente
      */
     void stop();
+    /*
+     *  Retorna true is el thread ya terminó su ejecución.
+     *  False sino
+     */
+    bool is_dead();
 };
 
 #endif

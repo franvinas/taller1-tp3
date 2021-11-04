@@ -5,7 +5,7 @@
 #include "QueuesMap.h"
 #include "ServerThread.h"
 #include "../common_src/Socket.h"
-#include <deque>
+#include <list>
 
 /*
  *  AcceptorThread hereda de Thread e implementa run().
@@ -14,7 +14,7 @@ class AcceptorThread: public Thread {
 private:
     Socket &sk;
     QueuesMap queuesMap;
-    std::deque<ServerThread> threads;
+    std::list<ServerThread> threads;
     
 protected:
     /*
