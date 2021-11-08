@@ -39,7 +39,7 @@ El comando `push` tiene el siguiente formato:
 push <nombre-de-la-cola> <mensaje-como-string>
 ~~~
 
-Este comando encola un mensaje en la cola que corresponde segun los parametros dados. Si la cola no existía previamente, se crea una vacía y se encola el mensaje.
+Este comando encola un mensaje en la cola que corresponde segun los parametros dados. Si la cola no existía previamente, crea una vacía y encola el mensaje.
 
 El comando `pop` tiene el siguiente formato:
 
@@ -73,7 +73,7 @@ La clase `Protocol` del cliente permite conectarse al servidor y comunicarse con
 
 #### Server
 
-Esta clase permite crear un socket que escuche clientes que se conectan al puerto asignado. Con método `run` se entra en un ciclo donde se lee de entrada estandar, una vez que el usuario ingresa el caracter 'q' se interrumpen todas las conexiones con los clientes y se cierra el servidor. Dentro de este método se crea y ejecuta el hilo aceptador.
+Esta clase permite crear un socket que escuche clientes que se conectan al puerto asignado. Con método `run` se entra en un ciclo donde se lee de entrada estandar, una vez que el usuario ingresa el caracter 'q' se interrumpen todas las conexiones con los clientes y se cierra el servidor. Dentro de este método se crea y lanza el hilo aceptador.
 
 #### Thread
 
@@ -106,6 +106,14 @@ Este clase implementa una cola. Tiene unicamente tres métodos: `define`, `pop` 
 La clase `Protocol` del servidor permite conectarse a un cliente y comunicarse con este. El metodo `recv` recibe el comando que el cliente quiere ejecutar. Dentro de este método se interpretan los bytes recibidos para obtener el comando a ejecutar, el nombre de la cola y el mensaje a encolar (si el comando es un `push`). El método `send` sirve para enviar un mensaje del cliente. Este método debe ser llamado despues de un `pop` para poder enviar el mensaje consumido.
 
 ## Diagramas 
+
+A continuación se muestra la secuencia que se lleva adelante en el servidor cuando un cliente decide realizar un `pop` a una determinada cola.
+
+![diagrama_pop](imgs/pop-cmd.png)
+
+El servidor se cierra una vez que lee por entrada estandar el caracter 'q'. Cuando se lee este caracter, se cierra el socket que acepta nuevas conexiones de clientes. De esta forma, todos los threads en ejecución pueden terminar, liberar sus recursos y salir prolijamente.
+
+![diagrama_stop](imgs/stop.png)
 
 ## Consideraciones
 
