@@ -140,7 +140,6 @@ int Socket::send(const char *buffer, ssize_t len) {
         ssize_t b = ::send(this->fd, buffer + sent_b, 
                             len - sent_b, MSG_NOSIGNAL);
         if (b == -1) {
-            std::cerr << "Error send: " << strerror(errno) << "\n";
             throw std::runtime_error("Error in socket send()");
         } else if (b == 0) { // Socket cerrado
             return 0;

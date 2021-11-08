@@ -60,22 +60,28 @@ void Protocol::connect(const char *host, const char *port) {
     this->sk.connect(host, port);
 }
 
-void Protocol::send(std::string &cmd_unparsed) {
+int Protocol::send(std::string &cmd_unparsed) {
     std::stringstream cmd_unparsed_stream(cmd_unparsed);
     std::string cmd, queue_name;
     cmd_unparsed_stream >> cmd;
     
     char cmd_char = parse_cmd(cmd);
-    this->sk.send(&cmd_char, 1);
+    try {
+        this->sk.send(&cmd_char, 1);
     
-    cmd_unparsed_stream >> queue_name;
-    this->send_string(queue_name);
-    
-    if (cmd == PUSH_CMD) {
-        std::string message;
-        cmd_unparsed_stream >> message;
-        this->send_string(message);
+        cmd_unparsed_stream >> queue_name;
+        this->send_string(queue_name);
+        
+        if (cmd == PUSH_CMD) {
+            std::string message;
+            cmd_unparsed_stream >> message;
+            this->send_string(message);
+        }
+    } catch(const std::exception &e) {
+        return -1;
     }
+
+    return 0;
 }
 
 std::string Protocol::recv() {

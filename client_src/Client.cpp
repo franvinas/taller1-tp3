@@ -19,8 +19,8 @@ void Client::run() {
     std::string cmd_unparsed;
     Protocol protocol(this->sk);
     while (std::getline(std::cin, cmd_unparsed)) {
-        if (cmd_unparsed == EXIT_CMD) return;
-        protocol.send(cmd_unparsed);
+        if (cmd_unparsed == EXIT_CMD) break;
+        if (protocol.send(cmd_unparsed) != 0) break; // Closed server
         std::stringstream cmd_stream(cmd_unparsed);
         std::string cmd_str;
         cmd_stream >> cmd_str;

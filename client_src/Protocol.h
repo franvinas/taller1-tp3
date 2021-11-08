@@ -25,8 +25,9 @@ public:
 
     /*
      *  Le envia al servidor el comando con el protocolo de mensaje adecuado
+     *  Retorna 0 si se envió correctamente y -1 si falló.
      */
-    void send(std::string &cmd_unparsed);
+    int send(std::string &cmd_unparsed);
 
     /*
      *  Recibe un mensaje del servidor
