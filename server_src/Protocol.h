@@ -16,15 +16,6 @@ public:
      *  Constructor
      */
     explicit Protocol(Socket &sk);
-    /*
-     *  Esperar a que un cliente se conecte.
-     */
-    void listen(const char *port);
-
-    /*
-     *  Acepta un nuevo cliente.
-     */
-    void new_client();
 
     /*
      *  Termina la conexión con el cliente.

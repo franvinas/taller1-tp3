@@ -11,13 +11,12 @@
     Metodos publicos
 ************************/
 
-Client::Client(const char *host, const char *service) {    
-    this->sk.connect(host, service);
+Client::Client(const char *host, const char *service) {
+    this->protocol.connect(host, service);
 }
 
 void Client::run() {
     std::string cmd_unparsed;
-    Protocol protocol(this->sk);
     while (std::getline(std::cin, cmd_unparsed)) {
         if (cmd_unparsed == EXIT_CMD) break;
         if (protocol.send(cmd_unparsed) != 0) break; // Closed server

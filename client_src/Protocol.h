@@ -6,7 +6,7 @@
 
 class Protocol {
 private:
-    Socket &sk;
+    Socket sk;
     void send_string(std::string &str);
     std::string recv_string();
     char parse_cmd(const std::string &cmd);
@@ -15,7 +15,7 @@ public:
     /*
      *  Constructor
      */
-    explicit Protocol(Socket &sk);
+    Protocol();
 
     /*
      *  Se debe llamar desde el cliente para conectarse a un servidor dado 

@@ -54,8 +54,6 @@ char Protocol::parse_cmd(const std::string &cmd) {
     Metodos publicos
 ************************/
 
-Protocol::Protocol(Socket &sk) : sk(sk) {}
-
 void Protocol::connect(const char *host, const char *port) {
     this->sk.connect(host, port);
 }
