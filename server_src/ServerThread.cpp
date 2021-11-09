@@ -48,6 +48,11 @@ ServerThread::ServerThread(Socket &peer_sk, QueuesMap &queuesMap)
                   keep_talking(true),
                   is_running(true) {}
 
+/*  Tanto para keep_talking como para is_running realizo una copia porque
+ *  son atómicos y por lo tanto no son movibles. 
+ *  Para queuesMap tambien realizo una copia porque se trata de una 
+ *  referencia y no del objeto en sí.
+ */
 ServerThread::ServerThread(ServerThread &&other) 
                 : Thread(std::move(other)),
                   protocol(std::move(other.protocol)),
