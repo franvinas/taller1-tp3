@@ -4,7 +4,7 @@
 #include "../common_src/Socket.h"
 #include <string>
 
-class Protocol {
+class ServerProtocol {
 private:
     Socket sk;
     void send_string(std::string &str);
@@ -15,7 +15,7 @@ public:
     /*
      *  Constructor
      */
-    explicit Protocol(Socket &sk);
+    explicit ServerProtocol(Socket &sk);
 
     /*
      *  Termina la conexión con el cliente.

@@ -1,10 +1,11 @@
-#include "Protocol.h"
+#include "ServerProtocol.h"
 #include "../common_src/defs.h"
 #include <string.h>
 #include <arpa/inet.h>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 #define LISTEN_BACKLOG 50
@@ -13,7 +14,7 @@
     Metodos privados
 ************************/
 
-void Protocol::send_string(std::string &str) {
+void ServerProtocol::send_string(std::string &str) {
     const char *str_to_send = str.c_str();
     unsigned short int str_len = str.length();
     unsigned short int str_len_be = htons(str_len);
@@ -23,7 +24,7 @@ void Protocol::send_string(std::string &str) {
     this->sk.send(str_to_send, str_len);
 }
 
-std::string Protocol::recv_string() {
+std::string ServerProtocol::recv_string() {
     char name_len_msg[2];
     int b = this->sk.recv(name_len_msg, 2);
     if (b <= 0) throw std::runtime_error("Error in recv()");
@@ -39,13 +40,13 @@ std::string Protocol::recv_string() {
     return std::string(buf, name_len);
 }
 
-char Protocol::parse_cmd(const std::string &cmd) {
-    if (cmd == DEFINE_CMD) {
-        return DEFINE_CHAR;
-    } else if (cmd == PUSH_CMD) {
-        return PUSH_CHAR;
-    } else if (cmd == POP_CMD) {
-        return POP_CHAR;
+std::string ServerProtocol::parse_cmd(char c) {
+    if (c == DEFINE_CHAR) {
+        return DEFINE_CMD;
+    } else if (c == PUSH_CHAR) {
+        return PUSH_CMD;
+    } else if (c == POP_CHAR) {
+        return POP_CMD;
     }
     throw std::runtime_error("Command unknown");
 }
@@ -54,34 +55,30 @@ char Protocol::parse_cmd(const std::string &cmd) {
     Metodos publicos
 ************************/
 
-void Protocol::connect(const char *host, const char *port) {
-    this->sk.connect(host, port);
+ServerProtocol::ServerProtocol(Socket &sk) : sk(std::move(sk)) {}
+
+
+void ServerProtocol::send(std::string &msg) {
+    send_string(msg);
 }
 
-int Protocol::send(std::string &cmd_unparsed) {
-    std::stringstream cmd_unparsed_stream(cmd_unparsed);
-    std::string cmd, queue_name;
-    cmd_unparsed_stream >> cmd;
-    
-    char cmd_char = parse_cmd(cmd);
-    try {
-        this->sk.send(&cmd_char, 1);
-    
-        cmd_unparsed_stream >> queue_name;
-        this->send_string(queue_name);
-        
-        if (cmd == PUSH_CMD) {
-            std::string message;
-            cmd_unparsed_stream >> message;
-            this->send_string(message);
-        }
-    } catch(const std::exception &e) {
-        return -1;
-    }
+int ServerProtocol::recv(std::string &cmd, 
+                   std::string &queue_name, 
+                   std::string &message) {
+    char cmd_char;
+    int b = this->sk.recv(&cmd_char, 1);
+    if (b == -1) throw std::runtime_error("Error in recv()");
+    if (b == 0) return 0; // Socket closed
+    queue_name = this->recv_string();
+    cmd = parse_cmd(cmd_char);
 
-    return 0;
+    if (cmd == PUSH_CMD)
+        message = this->recv_string();
+    
+    return b;
 }
 
-std::string Protocol::recv() {
-    return this->recv_string();
+void ServerProtocol::close_connection() {
+    this->sk.shutdown();
+    this->sk.close();
 }

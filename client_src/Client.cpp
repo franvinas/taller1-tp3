@@ -1,5 +1,5 @@
 #include "Client.h"
-#include "Protocol.h"
+#include "ClientProtocol.h"
 #include "../common_src/defs.h"
 #include <string>
 #include <iostream>

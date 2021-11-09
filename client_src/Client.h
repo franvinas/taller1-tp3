@@ -1,11 +1,11 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "Protocol.h"
+#include "ClientProtocol.h"
 
 class Client {
 private:
-    Protocol protocol;
+    ClientProtocol protocol;
     void define();
     void push();
     void pop();

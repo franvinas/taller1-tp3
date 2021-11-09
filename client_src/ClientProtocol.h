@@ -4,7 +4,7 @@
 #include "../common_src/Socket.h"
 #include <string>
 
-class Protocol {
+class ClientProtocol {
 private:
     Socket sk;
     void send_string(std::string &str);
@@ -15,7 +15,7 @@ public:
     /*
      *  Constructor
      */
-    Protocol();
+    ClientProtocol();
 
     /*
      *  Se debe llamar desde el cliente para conectarse a un servidor dado 

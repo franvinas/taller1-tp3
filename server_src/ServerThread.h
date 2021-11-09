@@ -2,7 +2,7 @@
 #define SERVER_THREAD_H
 
 #include "Thread.h"
-#include "Protocol.h"
+#include "ServerProtocol.h"
 #include "QueuesMap.h"
 #include <atomic>
 #include <string>
@@ -14,7 +14,7 @@
  */
 class ServerThread: public Thread {
 private:
-    Protocol protocol;    
+    ServerProtocol protocol;    
     QueuesMap &queuesMap;
     std::atomic<bool> keep_talking;
     std::atomic<bool> is_running;

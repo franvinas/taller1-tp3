@@ -1,5 +1,4 @@
 #include "Server.h"
-#include "Protocol.h"
 #include "AcceptorThread.h"
 #include <string>
 #include <iostream>
